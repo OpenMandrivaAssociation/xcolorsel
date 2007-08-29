@@ -15,7 +15,7 @@ Url: ftp://ftp.x.org/contrib/utilities/xcolorsel-1.1a-src.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: imake
 BuildRequires: gccmakedep
-BuildRequires: libXaw3d-devel
+BuildRequires: Xaw3d-devel
 BuildRequires: libxmu-devel
 BuildRequires: libxt-devel
 BuildRequires: libxpm-devel
