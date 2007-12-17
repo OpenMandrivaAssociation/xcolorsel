@@ -12,7 +12,6 @@ Patch1: xcolorsel_rgbtxt-mdv.patch
 License: GPLv2+
 Group: Graphics
 Url: ftp://ftp.x.org/contrib/utilities/xcolorsel-1.1a-src.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: imake
 BuildRequires: gccmakedep
 BuildRequires: Xaw3d-devel
