@@ -1,6 +1,6 @@
 %define name xcolorsel
 %define version 1.1a
-%define release %mkrel 3
+%define release %mkrel 4
 
 Summary: Simple color displayer/selector for X11 rgb.txt files
 Name: %{name}
