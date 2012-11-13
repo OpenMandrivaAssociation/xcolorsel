@@ -1,0 +1,83 @@
+--- xcolorsel/RgbText.c
++++ xcolorsel/RgbText.c
+@@ -146,7 +146,7 @@ static XtResource resources[] = {
+ { XtNcolumns, XtCColumns, XtRDimension, sizeof(Dimension), offset(columns),
+ 		XtRString, (XtPointer) "30" },
+ { XtNfile, XtCFile, XtRString, sizeof(String), offset(file),
+-		XtRString, (XtPointer) "/etc/X11/rgb.txt" },
++		XtRString, (XtPointer) "/usr/share/X11/rgb.txt" },
+ { XtNtileWidth, XtCTileWidth, XtRDimension, sizeof(Dimension), offset(tile_width),
+ 		XtRString, (XtPointer) "3" },
+ { XtNmaxRed, XtCMaxRed, XtRShort, sizeof(unsigned short), offset(max_red),
+--- xcolorsel/RgbText.h
++++ xcolorsel/RgbText.h
+@@ -96,7 +96,7 @@ rows		Rows		Dimension	10	This is converted to pixels and
+ 							returned as the preferred
+ 							height of this widget
+ columns		Columns		Dimension	30	Same as above but for columns.		
+-file		File		String		"/usr/lib/X11/rgb.txt" The file to display
++file		File		String		"/usr/share/X11/rgb.txt" The file to display
+ tileWidth	TileWidth	Dimension	3	The width of the displayed colortiles
+ 							measured in space characters
+ grabCursor	Cursor		Cursor		None	The cursor to use for grabbing of
+--- xcolorsel/Xcolorsel.help
++++ xcolorsel/Xcolorsel.help
+@@ -321,7 +321,7 @@ OPTIONS
+ 
+        -file filename (*.file: filename) sets the file to be read
+ 	      in    and	   displayed.	 Default    is	  usually
+-	      /usr/lib/X11/rgb.txt.  You can specify the filename
++	      /usr/share/X11/rgb.txt.  You   can    specify   the
+ 
+ 
+ 
+@@ -334,7 +334,8 @@ OPTIONS
+ Xcolorsel(1)	      Xcolorsel User's Guide	     Xcolorsel(1)
+ 
+ 
+-	      as command parameter without the prefixing -file.
++	      filename as command parameter without the prefixing
++	      -file.
+ 
+        -grabcursor cursor (*.grabCursor: cursor)  allows  you  to
+ 	      specify the cursor shown while grabbing colors.
+--- xcolorsel/xcolorsel.c
++++ xcolorsel/xcolorsel.c
+@@ -496,7 +496,7 @@ if(argc!=1)
+ fprintf(stderr,
+ "usage: %s [options] [RgbTxtFile]\n"
+ "\tdisplays contents of RgbTxtFile (default is\n"
+-"\t/usr/lib/X11/rgb.txt) together with color\n"
++"\t/usr/share/X11/rgb.txt) together with color\n"
+ "\tsamples.\n"
+ "Allowed options are:\n"
+ " Toolkit options:\n"
+--- xcolorsel/xcolorsel.man
++++ xcolorsel/xcolorsel.man
+@@ -31,7 +31,7 @@ xcolorsel \- display contents of rgb.txt files together with color probes.
+ This utility displays the contents of the
+ .I rgb.txt
+ file (usually found as
+-.IR /usr/lib/X11/rgb.txt )
++.IR /usr/share/X11/rgb.txt )
+ or a file with this format specified as the optional
+ .BI [ RgbTxtFile ]
+ parameter. Each line of this file consists of 3 integers
+@@ -299,7 +299,7 @@ selected.
+ .BI "-file" " filename"
+ .RI ( "*.file: filename" )
+ sets the file to be read in and displayed. Default is usually
+-.RI "" /usr/lib/X11/rgb.txt .
++.RI "" /usr/share/X11/rgb.txt .
+ You can specify the filename as command parameter without the
+ prefixing
+ .BR -file .
+@@ -613,7 +613,7 @@ WHATSOEVER RESULTING FROM LOSS OF USE,  DATA OR PROFITS, WHETHER IN AN ACTION
+ OF CONTRACT,  NEGLIGENCE  OR  OTHER  TORTIOUS  ACTION,  ARISING OUT OF  OR IN
+ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ .SH FILES
+-.I /usr/lib/X11/rgb.txt
++.I /usr/share/X11/rgb.txt
+ .br
+ .I /usr/lib/X11/xcolorsel/Xcolorsel.help
+ .br

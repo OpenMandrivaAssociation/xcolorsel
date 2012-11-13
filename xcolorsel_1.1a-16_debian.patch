@@ -1,0 +1,318 @@
+--- xcolorsel/Imakefile
++++ xcolorsel/Imakefile
+@@ -82,9 +82,9 @@ InstallNonExecFile(Xcolorsel.help,$(XPALDIR))
+ DependTarget()
+ 
+ appdef-c.h: Xcolorsel-color.ad
+-	app2head Xcolorsel-color.ad > appdef-c.h
++	./app2head Xcolorsel-color.ad > appdef-c.h
+ appdef.h: Xcolorsel.ad
+-	app2head Xcolorsel.ad > appdef.h
++	./app2head Xcolorsel.ad > appdef.h
+ purge:
+ 	$(RM) xcolorsel *.o appdef.h appdef-c.h Xcolorsel.help *.tar.Z Makefile Makefile.bak makefile *.tar *.tar.gz
+ Xcolorsel.help: xcolorsel.man
+--- xcolorsel/RgbSink.c
++++ xcolorsel/RgbSink.c
+@@ -81,6 +81,7 @@
+ 
+ #include <X11/IntrinsicP.h>
+ #include <X11/StringDefs.h>
++#include <X11/Xaw3d/XawInit.h>
+ #include "RgbSinkP.h"
+ 
+ /* Find current Xrelease number */
+@@ -98,6 +99,12 @@
+ #endif /* LIB_X11R5 */
+ #endif /* LIB_X11R6 */
+ 
++/* workaround for Xaw 7.x */
++#if XawVersion >= 7000002L
++typedef int (*_XawSinkIntFunc)();
++typedef void (*_XawSinkVoidFunc)();
++#endif
++
+ /* No resources */
+ 
+ /* No actions */
+--- xcolorsel/RgbSink.h
++++ xcolorsel/RgbSink.h
+@@ -85,7 +85,7 @@
+ /*The Parent:*/
+ #include "RgbText.h"
+ /* The superclass: */
+-#include <X11/Xaw/AsciiSink.h>
++#include <X11/Xaw3d/AsciiSink.h>
+ 
+ /****************************************************************
+  *
+--- xcolorsel/RgbSinkP.h
++++ xcolorsel/RgbSinkP.h
+@@ -85,7 +85,7 @@
+ #include "RgbSink.h"
+ #include "config.h"
+ /* include superclass private header file */
+-#include <X11/Xaw/AsciiSinkP.h>
++#include <X11/Xaw3d/AsciiSinkP.h>
+ /* This is closely related to and uses parts of: */
+ #include "RgbTextP.h"
+ 
+--- xcolorsel/RgbSrc.c
++++ xcolorsel/RgbSrc.c
+@@ -81,8 +81,14 @@
+ 
+ #include <X11/IntrinsicP.h>
+ #include <X11/StringDefs.h>
++#include <X11/Xaw3d/XawInit.h>
+ #include "RgbSrcP.h"
+ 
++/* workaround for Xaw 7.x */
++#if (defined(XawVersion) && (XawVersion <= 7000002L))
++typedef XawTextPosition (*_XawTextPositionFunc)();
++#endif
++
+ /* No resources */
+ 
+ /* No actions */
+--- xcolorsel/RgbSrc.h
++++ xcolorsel/RgbSrc.h
+@@ -84,7 +84,7 @@
+ /*The Parent:*/
+ #include "RgbText.h"
+ /* The superclass: */
+-#include <X11/Xaw/AsciiSrc.h>
++#include <X11/Xaw3d/AsciiSrc.h>
+ 
+ /****************************************************************
+  *
+--- xcolorsel/RgbSrcP.h
++++ xcolorsel/RgbSrcP.h
+@@ -85,7 +85,7 @@
+ #include "config.h"
+ 
+ /* include superclass private header file */
+-#include <X11/Xaw/AsciiSrcP.h>
++#include <X11/Xaw3d/AsciiSrcP.h>
+ /* This is closely related to and uses parts of: */
+ #include "RgbTextP.h"
+ 
+--- xcolorsel/RgbText.c
++++ xcolorsel/RgbText.c
+@@ -83,7 +83,7 @@
+ #include <errno.h>
+ #include <X11/IntrinsicP.h>
+ #include <X11/StringDefs.h>
+-#include <X11/Xaw/Paned.h>
++#include <X11/Xaw3d/Paned.h>
+ #include "RgbTextP.h"
+ #include "RgbSinkP.h"
+ #include "RgbSrc.h"
+@@ -146,7 +146,7 @@ static XtResource resources[] = {
+ { XtNcolumns, XtCColumns, XtRDimension, sizeof(Dimension), offset(columns),
+ 		XtRString, (XtPointer) "30" },
+ { XtNfile, XtCFile, XtRString, sizeof(String), offset(file),
+-		XtRString, (XtPointer) "/usr/lib/X11/rgb.txt" },
++		XtRString, (XtPointer) "/etc/X11/rgb.txt" },
+ { XtNtileWidth, XtCTileWidth, XtRDimension, sizeof(Dimension), offset(tile_width),
+ 		XtRString, (XtPointer) "3" },
+ { XtNmaxRed, XtCMaxRed, XtRShort, sizeof(unsigned short), offset(max_red),
+--- xcolorsel/RgbText.h
++++ xcolorsel/RgbText.h
+@@ -133,7 +133,7 @@ No resizes are made when rows or columns is changed!
+ #ifndef _RgbText_h
+ #define _RgbText_h
+ 
+-#include <X11/Xaw/AsciiText.h>
++#include <X11/Xaw3d/AsciiText.h>
+ 
+ #define XtNmaxRows	"maxRows"
+ #define XtNrows		"rows"
+--- xcolorsel/RgbTextP.h
++++ xcolorsel/RgbTextP.h
+@@ -78,7 +78,7 @@
+ #include "RgbText.h"
+ #include "config.h"
+ 
+-#include <X11/Xaw/TextP.h>
++#include <X11/Xaw3d/TextP.h>
+ #include <X11/Xcms.h>
+ 
+ typedef struct _colordef { unsigned short red, green, blue; /*Theoretic RGB*/
+--- xcolorsel/Xcolorsel-color.ad
++++ xcolorsel/Xcolorsel-color.ad
+@@ -13,57 +13,57 @@
+ ! If this is the case you may also want to include the following
+ ! (by removing the leading !)
+ 
+-!*.message.borderWidth:0
++*.message.borderWidth:0
+ 
+ ! and to exclude (by inserting ! as the first character) the next lines:
+ 
+-*.message.borderWidth:2
+-*.Scrollbar.background: Chocolate2
+-*.Scrollbar.foreground: Chocolate4
++!*.message.borderWidth:2
++!*.Scrollbar.background: Chocolate2
++!*.Scrollbar.foreground: Chocolate4
+ 
+ ! Other (generic) color settings:
+ 
+-*.borderColor: LightSalmon4
++!*.borderColor: LightSalmon4
+ 
+ *.pointerColor: Black
+ *.pointerColorBackground: White
+ 
+-*.Background: SandyBrown
+-*.Foreground: Salmon4
++!*.Background: SandyBrown
++!*.Foreground: Salmon4
+ 
+ *.text.borderWidth: 2
+ 
+ *.displayMenu.borderWidth: 2
+ 
+-*.Command.background: Chocolate1
+-*.Command.foreground: Chocolate4
++!*.Command.background: Chocolate1
++!*.Command.foreground: Chocolate4
+ 
+-*.Toggle.background: Chocolate2
+-*.Toggle.foreground: Chocolate4
++!*.Toggle.background: Chocolate2
++!*.Toggle.foreground: Chocolate4
+ 
+ *.quit.background: OrangeRed2
+-*.quit.foreground: OrangeRed4
++!*.quit.foreground: OrangeRed4
+ 
+ *.close.background: OrangeRed2
+-*.close.foreground: OrangeRed4
++!*.close.foreground: OrangeRed4
+ 
+ *.about.background: OliveDrab2
+-*.about.foreground: OliveDrab4
++!*.about.foreground: OliveDrab4
+ 
+ *.defaults.background: OliveDrab2
+-*.defaults.foreground: OliveDrab4
++!*.defaults.foreground: OliveDrab4
+ 
+ *.grab.background: Gold1
+-*.grab.foreground: Gold4
++!*.grab.foreground: Gold4
+ 
+ *.display.background: Gold1
+-*.display.foreground: Gold4
++!*.display.foreground: Gold4
+ 
+ *.fileinfo.background: Gold2
+-*.fileinfo.foreground: Gold4
++!*.fileinfo.foreground: Gold4
+ 
+ *.reverse.background: Gold2
+-*.reverse.foreground: Gold4
++!*.reverse.foreground: Gold4
+ 
+ ! Include standard settings:
+ 
+--- xcolorsel/Xcolorsel.ad
++++ xcolorsel/Xcolorsel.ad
+@@ -1,4 +1,6 @@
+ ! Standard layout:
++Xcolorsel.width:				420
++
+ *.text.scrollHorizontal:			WhenNeeded
+ *.text.scrollVertical:				WhenNeeded
+ *.text.displayCaret:				False
+--- xcolorsel/appdef-c.h
++++ xcolorsel/appdef-c.h
+@@ -1,32 +1,15 @@
+ "*.beNiceToColormap: False",
+ "*.shadowWidth: 2",
+-"*.message.borderWidth:2",
+-"*.Scrollbar.background: Chocolate2",
+-"*.Scrollbar.foreground: Chocolate4",
+-"*.borderColor: LightSalmon4",
++"*.message.borderWidth:0",
+ "*.pointerColor: Black",
+ "*.pointerColorBackground: White",
+-"*.Background: SandyBrown",
+-"*.Foreground: Salmon4",
+ "*.text.borderWidth: 2",
+ "*.displayMenu.borderWidth: 2",
+-"*.Command.background: Chocolate1",
+-"*.Command.foreground: Chocolate4",
+-"*.Toggle.background: Chocolate2",
+-"*.Toggle.foreground: Chocolate4",
+ "*.quit.background: OrangeRed2",
+-"*.quit.foreground: OrangeRed4",
+ "*.close.background: OrangeRed2",
+-"*.close.foreground: OrangeRed4",
+ "*.about.background: OliveDrab2",
+-"*.about.foreground: OliveDrab4",
+ "*.defaults.background: OliveDrab2",
+-"*.defaults.foreground: OliveDrab4",
+ "*.grab.background: Gold1",
+-"*.grab.foreground: Gold4",
+ "*.display.background: Gold1",
+-"*.display.foreground: Gold4",
+ "*.fileinfo.background: Gold2",
+-"*.fileinfo.foreground: Gold4",
+ "*.reverse.background: Gold2",
+-"*.reverse.foreground: Gold4",
+--- xcolorsel/appdef.h
++++ xcolorsel/appdef.h
+@@ -1,3 +1,4 @@
++"Xcolorsel.width:				420",
+ "*.text.scrollHorizontal:			WhenNeeded",
+ "*.text.scrollVertical:				WhenNeeded",
+ "*.text.displayCaret:				False",
+--- xcolorsel/xcolorsel.c
++++ xcolorsel/xcolorsel.c
+@@ -60,16 +60,16 @@
+ #include <X11/Intrinsic.h>
+ #include <X11/Shell.h>
+ #include <X11/StringDefs.h>
+-#include <X11/Xaw/Box.h>
+-#include <X11/Xaw/Paned.h>
+-#include <X11/Xaw/Form.h>
+-#include <X11/Xaw/Label.h>
+-#include <X11/Xaw/Command.h>
+-#include <X11/Xaw/MenuButton.h>
+-#include <X11/Xaw/Toggle.h>
+-#include <X11/Xaw/SimpleMenu.h>
+-#include <X11/Xaw/SmeBSB.h>
+-#include <X11/Xaw/AsciiText.h>
++#include <X11/Xaw3d/Box.h>
++#include <X11/Xaw3d/Paned.h>
++#include <X11/Xaw3d/Form.h>
++#include <X11/Xaw3d/Label.h>
++#include <X11/Xaw3d/Command.h>
++#include <X11/Xaw3d/MenuButton.h>
++#include <X11/Xaw3d/Toggle.h>
++#include <X11/Xaw3d/SimpleMenu.h>
++#include <X11/Xaw3d/SmeBSB.h>
++#include <X11/Xaw3d/AsciiText.h>
+ 
+ #include "config.h"
+ #include "RgbText.h"
+@@ -253,7 +253,7 @@ XtActionsRec actions[] = {
+ 
+ String translations="<Message>WM_PROTOCOLS: wm_protocols()";
+ 
+-void main(int argc,char *argv[])
++int main(int argc,char *argv[])
+ {
+ size_t i;
+ register char *(*ptr);
+@@ -478,6 +478,8 @@ XtSetArg (args[0], XtNmaxHeight, actheight);
+ XtSetValues(myshell, args, 1);
+ 
+ XtAppMainLoop(mycontext);
++
++return 0;
+ }
+ 
+ void usage(int argc,char *argv[])
