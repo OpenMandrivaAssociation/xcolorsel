@@ -57,3 +57,30 @@ rm -rf $RPM_BUILD_ROOT
 %_sysconfdir/X11/app-defaults/Xcolorsel-color
 %_bindir/xcolorsel
 %_prefix/lib/X11/xcolorsel/Xcolorsel.help
+
+
+%changelog
+* Wed Sep 09 2009 Thierry Vignaud <tvignaud@mandriva.com> 1.1a-5mdv2010.0
++ Revision: 435067
+- rebuild
+
+* Sun Aug 03 2008 Thierry Vignaud <tvignaud@mandriva.com> 1.1a-4mdv2009.0
++ Revision: 262281
+- rebuild
+
+* Thu Jul 31 2008 Thierry Vignaud <tvignaud@mandriva.com> 1.1a-3mdv2009.0
++ Revision: 256677
+- rebuild
+
+* Thu Jan 03 2008 Olivier Blin <oblin@mandriva.com> 1.1a-1mdv2008.1
++ Revision: 140953
+- restore BuildRoot
+
+  + Thierry Vignaud <tvignaud@mandriva.com>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Wed Aug 29 2007 Gustavo De Nardin <gustavodn@mandriva.com> 1.1a-1mdv2008.0
++ Revision: 74600
+- fixed BuildRequires on Xaw3d
+- 1st Mandriva xcolorsel version imported into SVN
+
